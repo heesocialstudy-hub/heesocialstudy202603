@@ -637,12 +637,8 @@
          </select>
          <fieldset class="mt-5">
           <legend class="canva-text font-bold mb-2 text-sm">주요 재무 이벤트</legend>
-          <div class="grid gap-2 text-sm">
-           <label class="flex items-center gap-2 rounded-lg bg-slate-50 px-3 py-2 cursor-pointer hover:bg-slate-100"><input type="checkbox" name="planning-event" value="education"> <span class="canva-text">🎓 교육 / 학자금</span></label> 
-           <label class="flex items-center gap-2 rounded-lg bg-slate-50 px-3 py-2 cursor-pointer hover:bg-slate-100"><input type="checkbox" name="planning-event" value="housing"> <span class="canva-text">🏠 주택 마련 / 월세</span></label> 
-           <label class="flex items-center gap-2 rounded-lg bg-slate-50 px-3 py-2 cursor-pointer hover:bg-slate-100"><input type="checkbox" name="planning-event" value="family"> <span class="canva-text">💍 결혼 / 육아</span></label> 
-           <label class="flex items-center gap-2 rounded-lg bg-slate-50 px-3 py-2 cursor-pointer hover:bg-slate-100"><input type="checkbox" name="planning-event" value="health"> <span class="canva-text">🏥 의료비 / 건강</span></label> 
-           <label class="flex items-center gap-2 rounded-lg bg-slate-50 px-3 py-2 cursor-pointer hover:bg-slate-100"><input type="checkbox" name="planning-event" value="hobby"> <span class="canva-text">✈️ 취미 / 여행</span></label>
+          <div id="event-checkboxes" class="grid gap-2 text-sm">
+           <!-- 자바스크립트에서 동적 생성 및 렌더링 -->
           </div>
          </fieldset>
         </div>
@@ -692,6 +688,26 @@
     const completedValues = {};
     let activeIndex = 0;
     let completionReady = false;
+
+    // 이벤트 항목 데이터 정의 (이모지 및 오탈자 정정 반영)
+    const financialEvents = [
+      { id: "education", label: "🎓 교육 / 학자금" },
+      { id: "housing", label: "🏠 주택 마련 / 월세" },
+      { id: "family", label: "💍 결혼 / 육아" },
+      { id: "health", label: "🏥 의료비 / 건강" },
+      { id: "hobby", label: "✈️ 취미 / 여행" }
+    ];
+
+    function renderEventCheckboxes() {
+      const container = document.getElementById("event-checkboxes");
+      if (!container) return;
+      container.innerHTML = financialEvents.map(evt => `
+        <label class="flex items-center gap-2 rounded-lg bg-slate-50 px-3 py-2 cursor-pointer hover:bg-slate-100">
+          <input type="checkbox" name="planning-event" value="${evt.id}"> 
+          <span class="canva-text">${evt.label}</span>
+        </label>
+      `).join("");
+    }
 
     const tabs = [...document.querySelectorAll("[data-stage]")];
     const panels = [...document.querySelectorAll("[data-stage-panel]")];
@@ -1000,7 +1016,8 @@
       document.querySelector("header").scrollIntoView({ behavior:"smooth", block:"start" });
     });
 
-    // 초기화 실행
+    // 초기화 및 이벤트 동적 생성 실행
+    renderEventCheckboxes();
     showStage(0);
     updateProgress();
     if (window.lucide) {
